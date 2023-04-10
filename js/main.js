@@ -245,7 +245,7 @@ let producto = [
     }
     }
     ];
-    function getProducto(){
+   /* function getProducto(){
         return new Promise((resolve, reject)=>{
             if (producto==null){
                 reject(new Error("Producto no existe"));
@@ -255,28 +255,90 @@ let producto = [
             } , 2000);
     
         });
-    } 
-    getProducto()
-                .then((a)=> console.log(a))
-                .catch ((b) => console.log(b));
-    
-         console.log(producto[1]. category);
-         console.log(typeof producto);
-         window.addEventListener("load", function (event){
-            if (getProducto("producto") !=null){
-                producto.forEach(r => {
-                    let row =   `
-                                <div class="card border-info mb-3" style="width:auto;">
-                                <img src="${r.image}" class="card-img-top" id="foto" alt="fotoProducto">
-                                <div class="card-body"></div>
-                                <h3 class="card-title" id="titulo">${r.title}</h3>
-                                <h5 class="cardcategoria" id="categoria">${r.category}</h5>
-                                <p class="card-tex" id="descripcion">${r.description}</p>
-                                <a href="#" class="btn btn-primary" id="btnMasInfo"> Más Info </a>
-                            </div>
-                                </div>`;
-                card[0].insertAdjacentHTML("beforeend", row);
-                });
-            }
-        });
-    
+    } */function getProducto(){   
+    let promesa = fetch("https://fakestoreapi.com/products", {
+        method: "GET"
+    });
+
+    promesa.then((response) => {
+        response.json().then ((prods) => {
+          
+
+            producto.forEach(r => {
+
+
+                let row =   `
+                            <div class="card border-info mb-3" style="width:auto;">
+                            <img src="${r.image}" class="card-img-top" id="foto" alt="fotoProducto">
+                            <div class="card-body"></div>
+                            <h3 class="card-title" id="titulo">${r.title}</h3>
+                            <h5 class="cardcategoria" id="categoria">${r.category}</h5>
+                            <p class="card-tex" id="descripcion">${r.description.slice(0,80)} ...</p>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_${r.id}">Mas Info</button>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal_${r.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+  <div class="modal-header">
+    <h1 class="modal-title fs-5" id="exampleModalLabel">${r.title}</h1>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    ${r.description}
+  </div>
+  <p class="text-end fw-bold">$${r.price}</p>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    </div>
+     </div>`;
+            
+            card[0].insertAdjacentHTML("beforeend", row);
+
+
+            });
+
+            console.log("prods =>json()");
+            console.log(prods);
+        }// prods
+        ) // then json
+        .catch ( (err) =>{
+            console.log("Error en e formato de respuesta: "+ err.message);
+
+        });// catch json
+    }// response
+    )// then
+    .catch ( (error) =>{
+        console.log("Error en la respuesta: " + error.message);
+    }); 
+
+} 
+     console.log(producto[1]. category);
+     console.log(typeof producto);
+
+     
+     window.addEventListener("load", function (event){
+        if (getProducto() !=null){
+            
+            producto.forEach(r => {
+
+
+                let row =   `
+                            <div class="card border-info mb-3" style="width:auto;">
+                            <img src="${r.image}" class="card-img-top" id="foto" alt="fotoProducto">
+                            <div class="card-body"></div>
+                            <h3 class="card-title" id="titulo">${r.title}</h3>
+                            <h5 class="cardcategoria" id="categoria">${r.category}</h5>
+                            <p class="card-tex" id="descripcion">${r.description}</p>
+                            <a href="#" class="btn btn-primary" id="btnMasInfo"> Más Info </a>
+                        </div>
+                            </div>`;
+            
+            card[0].insertAdjacentHTML("beforeend", row);
+
+
+            });
+
+        }
+
+    });
+   
